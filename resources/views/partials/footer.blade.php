@@ -5,16 +5,7 @@
             {{-- Logo e tagline --}}
             <div class="lg:col-span-2">
                 <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" class="text-accent">
-                        <path d="M8 10C8 10 10 4 12 4C13 4 14 6 14 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M28 10C28 10 26 4 24 4C23 4 22 6 22 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="18" cy="18" r="11" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="13" cy="17" r="3.5" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="23" cy="17" r="3.5" stroke="currentColor" stroke-width="2"/>
-                        <path d="M16.5 17H19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M14 23C14 23 16 25 18 25C20 25 22 23 22 23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <span class="text-xl font-bold tracking-tight text-text-high" style="font-family: var(--font-heading)">NerdOpina</span>
+                    <x-logo />
                 </a>
                 <p class="mt-4 text-sm text-text-medium max-w-xs">
                     Seu portal de cultura nerd com reviews, notícias e análises sobre games, animes, tech e muito mais.

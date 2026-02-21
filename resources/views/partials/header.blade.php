@@ -8,71 +8,61 @@
         <div class="flex items-center justify-between h-16">
 
             {{-- Logo --}}
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 flex-shrink-0">
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" class="text-accent">
-                    <path d="M8 10C8 10 10 4 12 4C13 4 14 6 14 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M28 10C28 10 26 4 24 4C23 4 22 6 22 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="18" cy="18" r="11" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="13" cy="17" r="3.5" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="23" cy="17" r="3.5" stroke="currentColor" stroke-width="2"/>
-                    <path d="M16.5 17H19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M14 23C14 23 16 25 18 25C20 25 22 23 22 23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span class="text-xl font-bold tracking-tight text-text-high" style="font-family: var(--font-heading)">NerdOpina</span>
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0">
+               <x-logo />
             </a>
 
             {{-- Desktop Nav --}}
-            @php
-            $navLinks = [
-                ['href' => route('home'), 'label' => 'Home', 'subs' => []],
-                ['href' => route('categories.show', 'reviews'), 'label' => 'Reviews', 'subs' => [
-                    ['href' => route('categories.show', 'games'), 'label' => 'Games'],
-                    ['href' => route('categories.show', 'anime'), 'label' => 'Animes'],
-                    ['href' => route('categories.show', 'tech'), 'label' => 'Tech'],
-                ]],
-                ['href' => route('categories.show', 'guias'), 'label' => 'Guias', 'subs' => [
-                    ['href' => route('categories.show', 'games'), 'label' => 'Games'],
-                    ['href' => route('categories.show', 'tecnologia'), 'label' => 'Tecnologia'],
-                ]],
-                ['href' => route('categories.show', 'top-listas'), 'label' => 'Top Listas', 'subs' => [
-                    ['href' => route('categories.show', 'games'), 'label' => 'Games'],
-                    ['href' => route('categories.show', 'anime'), 'label' => 'Animes'],
-                    ['href' => route('categories.show', 'tech'), 'label' => 'Tech'],
-                ]],
-                ['href' => route('categories.show', 'noticias'), 'label' => 'Notícias', 'subs' => []],
-                ['href' => route('categories.show', 'anime'), 'label' => 'Anime', 'subs' => []],
-                ['href' => route('categories.show', 'tech'), 'label' => 'Tech', 'subs' => []],
-            ];
-            @endphp
-
             <nav class="hidden lg:flex items-center gap-6">
-                @foreach ($navLinks as $link)
-                <div class="relative group" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                    <a href="{{ $link['href'] }}"
-                       class="flex items-center gap-1 text-sm text-text-medium hover:text-text-high transition-colors duration-150 relative group">
-                        {{ $link['label'] }}
-                        @if (!empty($link['subs']))
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                        @endif
+                <div>
+                    <a href="{{ route('home') }}"class="flex items-center gap-1 text-sm text-text-medium hover:text-text-high transition-colors duration-150 relative group">
+                        Home                       
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-200"></span>
                     </a>
+                </div>
+                @foreach ($categories as $category)
 
-                    @if (!empty($link['subs']))
-                    <div x-show="open" x-transition
-                         class="absolute top-full left-0 pt-2 min-w-[180px] z-50">
-                        <div class="bg-bg-surface border border-border-subtle rounded-lg shadow-lg py-2">
-                            @foreach ($link['subs'] as $sub)
-                            <a href="{{ $sub['href'] }}"
-                               class="block px-4 py-2 text-sm text-text-medium hover:text-text-high hover:bg-bg-elevated transition-colors duration-150">
-                                {{ $sub['label'] }}
-                            </a>
-                            @endforeach
-                        </div>
+                    @if ($category->posts_count > 0 || $category->children->isNotEmpty())
+                    <div class="relative group"
+                        x-data="{ open: false }"
+                        @mouseenter="open = true"
+                        @mouseleave="open = false">
+
+                        <a href="{{ route('categories.show', $category->slug) }}"
+                        class="flex items-center gap-1 text-sm text-text-medium hover:text-text-high transition-colors duration-150 relative group">
+                        
+                            {{ $category->name }}
+
+                            @if ($category->children->isNotEmpty())
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            @endif
+
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-200"></span>
+                        </a>
+
+                        {{-- Dropdown --}}
+                        @if ($category->children->isNotEmpty())
+                            <div x-show="open" x-transition x-cloak
+                                class="absolute top-full left-0 pt-2 min-w-45 z-50">
+                                <div class="bg-bg-surface border border-border-subtle rounded-lg shadow-lg py-2">
+
+                                    @foreach ($category->children as $child)                                       
+                                        <a href="{{ route('categories.show', $child->slug) }}"
+                                        class="block px-4 py-2 text-sm text-text-medium hover:text-text-high hover:bg-bg-elevated transition-colors duration-150">
+                                            {{ $child->name }}
+                                        </a>                                        
+                                    @endforeach
+
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                     @endif
-                </div>
+
                 @endforeach
             </nav>
 
@@ -81,13 +71,13 @@
 
                 {{-- Search --}}
                 <div x-data="{ open: false, query: '' }">
-                    <button x-show="!open" @click="open = true"
+                    <button x-show="!open"  @click="open = true"
                             class="p-2 text-text-medium hover:text-text-high transition-colors duration-150">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
                     </button>
-                    <div x-show="open" class="flex items-center gap-2">
+                    <div x-show="open" x-cloak class="flex items-center gap-2">
                         <form action="{{ route('search') }}" method="GET" class="flex items-center gap-2">
                             <input type="text" name="q" x-model="query" x-ref="searchInput"
                                    x-init="$watch('open', v => v && $nextTick(() => $refs.searchInput.focus()))"
@@ -109,7 +99,7 @@
                     <svg x-show="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
-                    <svg x-show="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg x-show="!isDark" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
                     </svg>
                 </button>
@@ -120,7 +110,7 @@
                     <svg x-show="!mobileOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
-                    <svg x-show="mobileOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg x-show="mobileOpen" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
@@ -128,34 +118,72 @@
         </div>
 
         {{-- Mobile Nav --}}
-        <nav x-show="mobileOpen" x-transition class="lg:hidden py-4 border-t border-border-subtle">
-            @foreach ($navLinks as $link)
-            <div x-data="{ subOpen: false }" class="mb-1">
-                <div class="flex items-center justify-between py-2">
-                    <a href="{{ $link['href'] }}" class="text-text-medium hover:text-text-high transition-colors duration-150">
-                        {{ $link['label'] }}
-                    </a>
-                    @if (!empty($link['subs']))
-                    <button @click="subOpen = !subOpen" class="p-1 text-text-medium">
-                        <svg class="w-4 h-4 transition-transform duration-200" :class="subOpen ? 'rotate-180' : ''"
-                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    @endif
-                </div>
-                @if (!empty($link['subs']))
-                <div x-show="subOpen" class="ml-4 mt-1 space-y-1">
-                    @foreach ($link['subs'] as $sub)
-                    <a href="{{ $sub['href'] }}"
-                       class="block py-1.5 text-sm text-text-low hover:text-text-medium transition-colors duration-150">
-                        {{ $sub['label'] }}
-                    </a>
-                    @endforeach
-                </div>
-                @endif
+        <nav x-show="mobileOpen" x-cloak
+            x-transition
+            class="lg:hidden py-4 border-t border-border-subtle">
+            <div class="mb-1">
+                <a href="{{ route('home') }}"class="text-text-medium hover:text-text-high transition-colors duration-150">
+                    Home
+                </a>
             </div>
+
+            @foreach ($categories as $category)
+
+                @if ($category->posts_count > 0 || $category->children->isNotEmpty())
+
+                <div x-data="{ subOpen: false }" class="mb-1">
+
+                    <div class="flex items-center justify-between py-2">
+
+                        {{-- Link principal --}}
+                        <a href="{{ route('categories.show', $category->slug) }}"
+                        class="text-text-medium hover:text-text-high transition-colors duration-150">
+                            {{ $category->name }}
+                        </a>
+
+                        {{-- Botão dropdown --}}
+                        @if ($category->children->isNotEmpty())
+                        <button @click="subOpen = !subOpen"
+                                class="p-1 text-text-medium">
+
+                            <svg class="w-4 h-4 transition-transform duration-200"
+                                :class="subOpen ? 'rotate-180' : ''"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24">
+
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"/>
+                            </svg>
+
+                        </button>
+                        @endif
+                    </div>
+
+                    {{-- Subcategorias --}}
+                    @if ($category->children->isNotEmpty())
+                        <div x-show="subOpen"
+                            x-collapse
+                            class="ml-4 mt-1 space-y-1">
+
+                            @foreach ($category->children as $child)                                
+                                <a href="{{ route('categories.show', $child->slug) }}"
+                                class="block py-1.5 text-sm text-text-low hover:text-text-medium transition-colors duration-150">
+                                    {{ $child->name }}
+                                </a>
+                            @endforeach
+
+                        </div>
+                    @endif
+
+                </div>
+
+                @endif
+
             @endforeach
+
         </nav>
     </div>
 </header>

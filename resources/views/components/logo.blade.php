@@ -1,0 +1,35 @@
+<div {{ $attributes->merge(['class' => 'flex items-center gap-2']) }}>
+    
+    <div class="text-accent w-8 h-8 relative">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+            
+            <!-- Fox/Cat Hybrid Silhouette -->
+            <path 
+                d="M5 10L8 4L13 7C14.5 6.5 17.5 6.5 19 7L24 4L27 10C28.5 13 29 16 28 19C27 24 23 28 16 28C9 28 5 24 4 19C3 16 3.5 13 5 10Z"
+                class="fill-current"
+            />
+
+            <!-- Glasses -->
+            <circle cx="11" cy="16" r="3.5"
+                stroke="var(--bg-base)"
+                stroke-width="1.5"
+                fill="none"
+            />
+
+            <circle cx="21" cy="16" r="3.5"
+                stroke="var(--bg-base)"
+                stroke-width="1.5"
+                fill="none"
+            />
+
+            <path 
+                d="M14.5 16H17.5"
+                stroke="var(--bg-base)"
+                stroke-width="1.5"
+                stroke-linecap="round"
+            />
+        </svg>
+    </div>
+
+    <span class="text-xl font-bold tracking-tight text-text-high" style="font-family: var(--font-heading)">NerdOpina</span>
+</div>

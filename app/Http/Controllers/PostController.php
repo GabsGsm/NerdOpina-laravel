@@ -34,14 +34,9 @@ class PostController extends Controller
 
         $featuredTopList = $topLists->first();
 
-        $categories = \App\Models\Category::whereNull('parent_id')
-            ->with('children')
-            ->withCount(['posts' => fn($q) => $q->published()])
-            ->get();
-
         return view('posts.index', compact(
             'posts', 'topLists', 'latestNews',
-            'popularPosts', 'featuredTopList', 'categories'
+            'popularPosts', 'featuredTopList'
         ));
     }
 
