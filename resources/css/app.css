@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+@import 'tailwindcss';
+
+:root {
+  --bg-base: #fafafa;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f0f0f7;
+  --bg-header-footer: #f5f5fa;
+  --text-high: #111118;
+  --text-medium: #555568;
+  --text-low: #9898aa;
+  --border-subtle: #e0e0ea;
+  --border-focus: #7c6dfa;
+  --accent: #6050e8;
+  --accent-warm: #d05530;
+
+  --cat-reviews: #4fc3f7;
+  --cat-top-listas: #ba68c8;
+  --cat-guias: #66bb6a;
+  --cat-tech: #7986cb;
+  --cat-noticias: #ffa726;
+  --cat-anime: #f48fb1;
+  --cat-kpop: #ffcc02;
+  --cat-games: #4dd0e1;
+
+  --font-heading: 'Sora', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --background: #fafafa;
+  --foreground: #111118;
+  --card: #ffffff;
+  --primary: #6050e8;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f0f7;
+  --muted: #f0f0f7;
+  --muted-foreground: #555568;
+  --border: #e0e0ea;
+  --ring: #7c6dfa;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --bg-base: #0f0f13;
+  --bg-surface: #18181f;
+  --bg-elevated: #22222c;
+  --bg-header-footer: #14141a;
+  --text-high: #f0f0f5;
+  --text-medium: #9898b0;
+  --text-low: #5a5a72;
+  --border-subtle: #2a2a38;
+  --border-focus: #5a5aff;
+  --accent: #7c6dfa;
+  --accent-warm: #e0643a;
+
+  --background: #0f0f13;
+  --foreground: #f0f0f5;
+  --card: #18181f;
+  --primary: #7c6dfa;
+  --border: #2a2a38;
+  --ring: #5a5aff;
+}
+
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-header-footer: var(--bg-header-footer);
+  --color-text-high: var(--text-high);
+  --color-text-medium: var(--text-medium);
+  --color-text-low: var(--text-low);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-focus: var(--border-focus);
+  --color-accent: var(--accent);
+  --color-accent-warm: var(--accent-warm);
+  --color-cat-reviews: var(--cat-reviews);
+  --color-cat-top-listas: var(--cat-top-listas);
+  --color-cat-guias: var(--cat-guias);
+  --color-cat-tech: var(--cat-tech);
+  --color-cat-noticias: var(--cat-noticias);
+  --color-cat-anime: var(--cat-anime);
+  --color-cat-kpop: var(--cat-kpop);
+  --color-cat-games: var(--cat-games);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+}
+
+@layer base {
+  * { border-color: var(--border-subtle); }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-high);
+    font-family: var(--font-body);
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  h1 { font-weight: 800; line-height: 1.2; }
+  h2 { font-weight: 700; line-height: 1.3; }
+  h3 { font-weight: 600; line-height: 1.4; }
+}
