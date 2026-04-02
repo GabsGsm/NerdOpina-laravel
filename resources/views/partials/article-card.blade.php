@@ -42,13 +42,6 @@
                 <time datetime="{{ $post->published_at->toIso8601String() }}">
                     {{ $post->published_at->translatedFormat('d M Y') }}
                 </time>
-                <span>·</span>
-                <span class="flex items-center gap-1">
-                    <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    {{ $readingMinutes }} min
-                </span>
             </div>
         </div>
     </article>

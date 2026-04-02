@@ -25,6 +25,7 @@ class UpdateHomeSectionRequest extends FormRequest
             'order_by' => ['required', 'in:latest,oldest'],
             'limit' => ['required', 'integer', 'min:1', 'max:20'],
             'is_active' => ['nullable', 'boolean'],
+            'accent_color' => ['nullable', 'string', 'regex:/^#[0-9a-fA-F]{6}$/'],
         ];
     }
 

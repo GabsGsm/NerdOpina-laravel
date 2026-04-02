@@ -72,14 +72,16 @@
     </div>
 
     <label class="block text-sm font-medium text-gray-700 mb-1">
-        <span x-show="postType === 'article'">Conteúdo (HTML) *</span>
+        <span x-show="postType === 'article'">Conteúdo *</span>
         <span x-show="postType === 'toplist'" x-cloak>Introdução / Conclusão <span class="text-gray-400 font-normal">(opcional)</span></span>
     </label>
-    <textarea name="content"
-              :rows="postType === 'toplist' ? 6 : 16"
-              :required="postType === 'article'"
-              class="w-full border rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 {{ $errors->has('content') ? 'border-red-400' : 'border-gray-300' }}">{{ old('content', $post?->content) }}</textarea>
-    @error('content')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+    <x-admin.editor
+        name="content"
+        :value="old('content', $post?->content ?? '')"
+        :upload-url="route('admin.editor.upload-image')"
+        :placeholder="'Escreva o conteúdo aqui...'"
+        :required="false"
+    />
 </div>
 
 {{-- Imagem Destaque --}}

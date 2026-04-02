@@ -81,6 +81,21 @@
     @error('category_ids')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
 </div>
 
+{{-- Cor de destaque --}}
+<div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+        Cor de destaque
+        <span class="text-gray-400 font-normal">(barra lateral do título da seção)</span>
+    </label>
+    <div class="flex items-center gap-3">
+        <input type="color" name="accent_color"
+               value="{{ old('accent_color', $homeSection?->accent_color ?? '#6366f1') }}"
+               class="h-9 w-16 cursor-pointer rounded-lg border border-gray-300 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <span class="text-xs text-gray-400">Deixe o padrão do tema se não quiser personalizar</span>
+    </div>
+    @error('accent_color')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+</div>
+
 {{-- Opções de exibição --}}
 <div class="border-t border-gray-100 pt-5">
     <h3 class="text-sm font-semibold text-gray-700 mb-4">Opções de Exibição</h3>

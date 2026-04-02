@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EditorController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PostController;
@@ -21,6 +22,8 @@ Route::middleware(['auth', 'admin', 'admin.security'])->group(function (): void 
     Route::resource('posts', PostController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('pages', PageController::class);
+
+    Route::post('editor/upload-image', [EditorController::class, 'uploadImage'])->name('editor.upload-image');
 
     Route::resource('home-sections', HomeSectionController::class);
     Route::post('home-sections/{homeSection}/move-up', [HomeSectionController::class, 'moveUp'])->name('home-sections.move-up');

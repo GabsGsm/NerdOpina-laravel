@@ -77,7 +77,13 @@ $seo = [
                         <div class="flex items-center justify-between mb-5">
                             @if ($section->show_title)
                             <div class="flex items-center gap-3">
-                                <div class="w-1 h-7 bg-accent rounded-full"></div>
+                                <div class="w-1 h-7 rounded-full"
+                                     @if($section->accent_color)
+                                         style="background-color: {{ $section->accent_color }}"
+                                     @else
+                                         style="background-color: var(--color-accent)"
+                                     @endif
+                                ></div>
                                 <h2 class="font-heading text-xl md:text-2xl font-bold text-text-high">
                                     {{ $section->title }}
                                 </h2>

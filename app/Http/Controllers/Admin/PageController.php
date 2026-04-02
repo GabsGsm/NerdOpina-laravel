@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePageRequest;
 use App\Http\Requests\Admin\UpdatePageRequest;
 use App\Models\Page;
+use App\Traits\SyncsContentImages;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class PageController extends Controller
 {
+    use SyncsContentImages;
+
     public function index(): View
     {
         $pages = Page::orderBy('title')->get();
@@ -38,7 +41,10 @@ class PageController extends Controller
 
     public function update(UpdatePageRequest $request, Page $page): RedirectResponse
     {
-        $page->update($request->validated());
+        $data = $request->validated();
+        $oldSrcs = $this->extractLocalImageSrcs($page->content ?? '');
+        $page->update($data);
+        $this->deleteOrphanedImages($oldSrcs, $this->extractLocalImageSrcs($data['content'] ?? ''));
 
         return redirect()->route('admin.pages.index')
             ->with('success', 'Página atualizada com sucesso.');

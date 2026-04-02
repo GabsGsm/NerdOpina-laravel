@@ -155,3 +155,44 @@
     font-family: var(--font-body);
   }
 }
+
+/* ─── Editor WYSIWYG (TipTap) ─── */
+.editor-btn {
+  @apply px-2 py-1 text-xs rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center;
+}
+
+.editor-wrapper {
+  @apply relative;
+}
+
+.tiptap {
+  @apply focus:outline-none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply text-gray-400 pointer-events-none float-left h-0;
+}
+
+.tiptap h2 { @apply text-xl font-bold mt-4 mb-2; }
+.tiptap h3 { @apply text-lg font-semibold mt-3 mb-2; }
+.tiptap p  { @apply mb-2; }
+.tiptap ul { @apply list-disc pl-5 mb-2; }
+.tiptap ol { @apply list-decimal pl-5 mb-2; }
+.tiptap blockquote { @apply border-l-4 border-gray-300 pl-4 italic text-gray-600 my-2; }
+.tiptap code { @apply bg-gray-100 text-red-600 px-1 rounded text-sm font-mono; }
+.tiptap hr  { @apply border-gray-300 my-4; }
+.tiptap img { @apply max-w-full rounded-lg my-3; }
+
+/* Clearfix para imagens com float dentro do editor */
+.tiptap::after { content: ''; display: table; clear: both; }
+
+/* Toolbar flutuante de imagem */
+.img-toolbar {
+  @apply absolute z-50 flex flex-wrap items-center gap-0.5 px-2 py-1.5
+         bg-white border border-gray-200 rounded-lg shadow-lg text-xs;
+  transition: none;
+}
+
+.img-toolbar__label { @apply text-gray-400 px-1 select-none; }
+.img-toolbar__sep   { @apply w-px h-4 bg-gray-200 mx-1; }

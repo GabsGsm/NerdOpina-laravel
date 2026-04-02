@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StorePostRequest;
 use App\Http\Requests\Admin\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Traits\SyncsContentImages;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,8 @@ use Illuminate\View\View;
 
 class PostController extends Controller
 {
+    use SyncsContentImages;
+
     public function index(Request $request): View
     {
         $posts = Post::with('category')
@@ -82,6 +85,8 @@ class PostController extends Controller
             $data['featured_image'] = $this->uploadImage($request->file('featured_image'));
         }
 
+        $oldContentSrcs = $this->extractLocalImageSrcs($post->content ?? '');
+
         $items = $data['items'] ?? [];
         unset($data['items'], $data['items_images']);
 
@@ -116,6 +121,9 @@ class PostController extends Controller
         foreach (array_diff($oldLocalImages, $newLocalImages) as $orphan) {
             Storage::disk('public')->delete($orphan);
         }
+
+        // Clean up orphaned content images
+        $this->deleteOrphanedImages($oldContentSrcs, $this->extractLocalImageSrcs($data['content'] ?? ''));
 
         return redirect()->route('admin.posts.index')
             ->with('success', 'Post atualizado com sucesso.');

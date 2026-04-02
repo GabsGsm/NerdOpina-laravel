@@ -19,6 +19,7 @@ class HomeSection extends Model
         'limit',
         'is_active',
         'position',
+        'accent_color',
     ];
 
     protected function casts(): array
