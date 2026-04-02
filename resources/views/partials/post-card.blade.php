@@ -1,26 +1,42 @@
 @props(['post'])
 
-<article class="flex flex-col gap-3 bg-gray-900 rounded-xl overflow-hidden hover:ring-1 hover:ring-gray-700 transition">
-    @if ($post->featured_image)
-    <img src="{{ asset($post->featured_image) }}"
-         alt="{{ $post->featured_image_alt }}"
-         class="w-full h-48 object-cover"
-         loading="lazy" decoding="async">
-    @endif
+<a href="{{ $post->getUrl() }}" class="group block">
+    <article class="bg-bg-surface rounded-xl overflow-hidden border border-border-subtle
+                    hover:border-border-focus transition-all duration-200 hover:shadow-lg h-full flex flex-col">
 
-    <div class="p-4 flex flex-col gap-2">
-        @include('partials.category-badge', ['category' => $post->category])
+        {{-- Imagem --}}
+        @if ($post->featured_image)
+        <div class="aspect-video overflow-hidden">
+            <img src="{{ $post->getFeaturedImageUrl() }}"
+                 alt="{{ $post->featured_image_alt ?? $post->title }}"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                 loading="lazy" decoding="async">
+        </div>
+        @else
+        <div class="aspect-video bg-bg-elevated flex items-center justify-center">
+            <svg class="w-12 h-12 text-text-low" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+        </div>
+        @endif
 
-        <h2 class="font-bold text-lg leading-snug">
-            <a href="{{ $post->getUrl() }}" class="hover:text-indigo-400 transition">
+        {{-- Conteúdo --}}
+        <div class="p-5 flex flex-col flex-1 gap-2">
+            @include('partials.category-badge', ['category' => $post->category])
+
+            <h3 class="font-heading font-bold text-text-high group-hover:text-accent transition-colors duration-150 line-clamp-2 leading-snug">
                 {{ $post->title }}
-            </a>
-        </h2>
+            </h3>
 
-        <p class="text-gray-400 text-sm line-clamp-3">{{ $post->excerpt }}</p>
+            <p class="text-sm text-text-medium line-clamp-2 flex-1">
+                {{ $post->excerpt }}
+            </p>
 
-        <time class="text-xs text-gray-500" datetime="{{ $post->published_at->toIso8601String() }}">
-            {{ $post->published_at->format('d/m/Y') }}
-        </time>
-    </div>
-</article>
+            <time class="text-xs text-text-low mt-auto"
+                  datetime="{{ $post->published_at->toIso8601String() }}">
+                {{ $post->published_at->format('d/m/Y') }}
+            </time>
+        </div>
+    </article>
+</a>

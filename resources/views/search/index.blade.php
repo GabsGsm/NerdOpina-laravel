@@ -13,8 +13,7 @@ $seo = [
 
     {{-- Header busca --}}
     <div class="max-w-3xl mx-auto text-center mb-12">
-        <h1 class="text-3xl md:text-4xl font-bold text-text-high mb-6"
-            style="font-family: var(--font-heading)">
+        <h1 class="font-heading text-3xl md:text-4xl font-bold text-text-high mb-6">
             Buscar
         </h1>
 
@@ -112,7 +111,7 @@ $seo = [
                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
         </div>
-        <h2 class="text-2xl font-bold text-text-high mb-4" style="font-family: var(--font-heading)">
+        <h2 class="font-heading text-2xl font-bold text-text-high mb-4">
             Comece sua busca
         </h2>
         <p class="text-text-medium mb-8 max-w-md mx-auto">

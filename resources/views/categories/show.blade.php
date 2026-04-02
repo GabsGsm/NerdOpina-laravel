@@ -17,11 +17,11 @@ $seo = [
         {{-- Breadcrumb --}}
         @if ($category->parent)
         <nav class="flex items-center gap-2 text-sm text-text-medium mb-4">
-            <a href="{{ route('home') }}" class="hover:text-text-high transition-colors">Home</a>
+            <a href="{{ route('home') }}" class="hover:text-text-high transition-colors duration-150">Home</a>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
-            <a href="{{ $category->parent->getUrl() }}" class="hover:text-text-high transition-colors">
+            <a href="{{ $category->parent->getUrl() }}" class="hover:text-text-high transition-colors duration-150">
                 {{ $category->parent->name }}
             </a>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,14 +34,13 @@ $seo = [
         {{-- Nome + cor --}}
         <div class="flex items-center gap-3 mb-3">
             <div class="w-1.5 h-10 rounded-full" style="background-color: {{ $category->color }}"></div>
-            <h1 class="text-3xl md:text-4xl font-bold text-text-high"
-                style="font-family: var(--font-heading)">
+            <h1 class="font-heading text-3xl md:text-4xl font-bold text-text-high">
                 {{ $category->name }}
             </h1>
         </div>
 
         @if ($category->description)
-        <p class="text-text-medium mt-2 max-w-2xl">{{ $category->description }}</p>
+        <p class="text-text-medium mt-2 max-w-2xl leading-relaxed">{{ $category->description }}</p>
         @endif
 
         {{-- Subcategorias filhas --}}
@@ -59,12 +58,10 @@ $seo = [
     @if ($topLists->isNotEmpty())
     <section class="mb-12">
         <div class="flex items-center gap-3 mb-6">
-            <div class="w-1 h-8 bg-cat-top-listas rounded-full"></div>
-            <h2 class="text-2xl font-bold text-text-high" style="font-family: var(--font-heading)">
-                Top Listas
-            </h2>
+            <div class="w-1 h-7 bg-cat-top-listas rounded-full"></div>
+            <h2 class="font-heading text-2xl font-bold text-text-high">Top Listas</h2>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach ($topLists as $post)
                 @include('partials.toplist-card', ['post' => $post])
             @endforeach
@@ -80,11 +77,11 @@ $seo = [
 
             {{-- Filtros --}}
             <div class="mb-8" x-data="categoryFilters()">
-                <div class="bg-bg-surface border border-border-subtle rounded-xl p-6 shadow-sm">
+                <div class="bg-bg-surface border border-border-subtle rounded-xl p-5 shadow-sm">
 
                     {{-- Busca --}}
                     <div class="relative mb-4">
-                        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-low"
+                        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-low"
                              fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -92,14 +89,15 @@ $seo = [
                         <input type="text"
                                x-model="search"
                                placeholder="Buscar por título..."
-                               class="w-full pl-12 pr-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg
-                                      text-text-high placeholder:text-text-low
-                                      focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20
+                               class="w-full pl-10 pr-10 py-2.5 bg-bg-elevated border border-border-subtle rounded-lg
+                                      text-sm text-text-high placeholder:text-text-low
+                                      focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/15
                                       transition-all duration-150">
                         <button x-show="search"
                                 @click="search = ''"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-low hover:text-text-high">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-low
+                                       hover:text-text-high transition-colors duration-150">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
@@ -107,14 +105,14 @@ $seo = [
 
                     {{-- Toggle mobile --}}
                     <button @click="filtersOpen = !filtersOpen"
-                            class="lg:hidden flex items-center justify-center gap-2 w-full px-4 py-2.5 mb-4
+                            class="lg:hidden flex items-center justify-center gap-2 w-full px-4 py-2 mb-4
                                    bg-bg-elevated text-text-medium hover:text-text-high rounded-lg
-                                   transition-colors duration-150 border border-border-subtle">
+                                   transition-colors duration-150 border border-border-subtle text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
                         </svg>
-                        <span class="text-sm font-medium" x-text="filtersOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'"></span>
+                        <span x-text="filtersOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'"></span>
                     </button>
 
                     {{-- Filtros --}}
@@ -124,13 +122,13 @@ $seo = [
                         {{-- Subcategoria --}}
                         @if ($category->children->isNotEmpty())
                         <div>
-                            <label class="block text-xs font-medium text-text-medium mb-2 uppercase tracking-wide">
+                            <label class="block text-xs font-medium text-text-medium mb-1.5 uppercase tracking-wide">
                                 Subcategoria
                             </label>
                             <select x-model="subcategory"
-                                    class="w-full px-3 py-2.5 bg-bg-elevated border border-border-subtle rounded-lg
+                                    class="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded-lg
                                            text-sm text-text-high focus:outline-none focus:border-accent
-                                           focus:ring-2 focus:ring-accent/20 transition-all duration-150 cursor-pointer">
+                                           focus:ring-2 focus:ring-accent/15 transition-all duration-150 cursor-pointer">
                                 <option value="">Todas</option>
                                 @foreach ($category->children as $child)
                                 <option value="{{ $child->slug }}">{{ $child->name }}</option>
@@ -141,13 +139,13 @@ $seo = [
 
                         {{-- Ordenação --}}
                         <div>
-                            <label class="block text-xs font-medium text-text-medium mb-2 uppercase tracking-wide">
+                            <label class="block text-xs font-medium text-text-medium mb-1.5 uppercase tracking-wide">
                                 Ordenar por
                             </label>
                             <select x-model="sortBy"
-                                    class="w-full px-3 py-2.5 bg-bg-elevated border border-border-subtle rounded-lg
+                                    class="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded-lg
                                            text-sm text-text-high focus:outline-none focus:border-accent
-                                           focus:ring-2 focus:ring-accent/20 transition-all duration-150 cursor-pointer">
+                                           focus:ring-2 focus:ring-accent/15 transition-all duration-150 cursor-pointer">
                                 <option value="recent">Mais Recentes</option>
                                 <option value="oldest">Mais Antigos</option>
                                 <option value="title-asc">Título (A-Z)</option>
@@ -159,10 +157,10 @@ $seo = [
                         <div class="flex items-end">
                             <button @click="reset()"
                                     :disabled="!hasFilters"
-                                    class="w-full px-4 py-2.5 bg-bg-elevated border border-border-subtle
-                                           text-text-medium hover:text-text-high hover:border-accent
-                                           rounded-lg text-sm font-medium transition-all duration-150
-                                           disabled:opacity-50 disabled:cursor-not-allowed">
+                                    class="w-full px-4 py-2 bg-bg-elevated border border-border-subtle
+                                           text-sm text-text-medium hover:text-text-high hover:border-accent
+                                           rounded-lg transition-all duration-150
+                                           disabled:opacity-40 disabled:cursor-not-allowed">
                                 Limpar Filtros
                             </button>
                         </div>
@@ -170,7 +168,7 @@ $seo = [
 
                     {{-- Indicador de filtros ativos --}}
                     <div x-show="hasFilters" class="mt-4 pt-4 border-t border-border-subtle">
-                        <p class="text-xs text-text-medium flex items-center gap-1">
+                        <p class="text-xs text-text-medium flex items-center gap-1.5">
                             <span class="w-2 h-2 bg-accent rounded-full inline-block"></span>
                             Filtros ativos
                         </p>
@@ -179,12 +177,12 @@ $seo = [
             </div>
 
             {{-- Lista de artigos --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 @forelse ($posts as $post)
                     @include('partials.article-card', ['post' => $post])
                 @empty
                 <div class="col-span-2 text-center py-16">
-                    <p class="text-text-medium text-lg">Nenhum artigo encontrado nesta categoria.</p>
+                    <p class="text-text-medium">Nenhum artigo encontrado nesta categoria.</p>
                 </div>
                 @endforelse
             </div>

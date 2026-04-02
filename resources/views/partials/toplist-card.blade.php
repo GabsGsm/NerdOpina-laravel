@@ -1,13 +1,13 @@
 @props(['post', 'compact' => false])
 
-<a href="{{ $post->getUrl() }}" class="group block">
-    <article class="bg-bg-surface rounded-lg p-5 border border-border-subtle
+<a href="{{ $post->getUrl() }}" class="group block h-full">
+    <article class="bg-bg-surface rounded-xl p-5 border border-border-subtle
                     hover:border-border-focus transition-all duration-200 hover:shadow-lg h-full flex flex-col">
 
-        @include('partials.category-badge', ['category' => $post->category])
+        @include('partials.category-badge', ['category' => $post->category, 'linked' => false])
 
-        <h3 class="font-bold text-text-high mt-2 mb-4 group-hover:text-accent transition-colors duration-150"
-            style="font-family: var(--font-heading)">
+        <h3 class="font-heading font-bold text-text-high mt-2 mb-4
+                   group-hover:text-accent transition-colors duration-150 leading-snug">
             {{ $post->title }}
         </h3>
 
@@ -16,18 +16,18 @@
             $displayItems = $compact ? $items->take(3) : $items->take(5);
         @endphp
 
-        <div class="space-y-3 flex-1">
+        <div class="space-y-2.5 flex-1">
             @foreach ($displayItems as $item)
             <div class="flex items-center gap-3 {{ $item->rank === 1 ? 'pb-3 border-b border-border-subtle' : '' }}">
-                <span class="text-2xl font-bold text-accent flex-shrink-0 w-8"
-                      style="font-family: var(--font-heading)">
+
+                <span class="font-heading text-xl font-black text-accent shrink-0 w-7 text-center leading-none">
                     {{ $item->rank }}
                 </span>
 
-                @if ($item->image_url)
-                <img src="{{ $item->image_url }}"
+                @if ($item->getImageUrl())
+                <img src="{{ $item->getImageUrl() }}"
                      alt="{{ $item->title }}"
-                     class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                     class="w-9 h-9 rounded-lg object-cover shrink-0"
                      loading="lazy">
                 @endif
 
@@ -39,9 +39,10 @@
         </div>
 
         @if (!$compact && $items->count() > 5)
-        <p class="text-xs text-text-low mt-4">
-            +{{ $items->count() - 5 }} mais
+        <p class="text-xs text-text-low mt-4 pt-3 border-t border-border-subtle">
+            +{{ $items->count() - 5 }} itens na lista
         </p>
         @endif
+
     </article>
 </a>

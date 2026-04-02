@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
@@ -35,8 +35,8 @@ class Post extends Model
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', 'published')
-                     ->where('published_at', '<=', now())
-                     ->orderByDesc('published_at');
+            ->where('published_at', '<=', now())
+            ->orderByDesc('published_at');
     }
 
     public function scopeOfType(Builder $query, string $type): Builder
@@ -58,8 +58,8 @@ class Post extends Model
 
     public function getFormattedDate(): string
     {
-        return $this->published_at->format('d') . ' de ' .
-            $this->published_at->translatedFormat('F') . ' de ' .
+        return $this->published_at->format('d').' de '.
+            $this->published_at->translatedFormat('F').' de '.
             $this->published_at->format('Y');
     }
 
@@ -99,29 +99,42 @@ class Post extends Model
         return route('posts.show', $this->slug);
     }
 
+    public function getFeaturedImageUrl(): ?string
+    {
+        if (! $this->featured_image) {
+            return null;
+        }
+
+        if (str_starts_with($this->featured_image, 'http')) {
+            return $this->featured_image;
+        }
+
+        return route('img', ['path' => $this->featured_image]);
+    }
+
     // --- Schema.org ---
 
     public function getSchemaMarkup(): array
     {
         $schema = [
-            '@context'      => 'https://schema.org',
-            '@type'         => $this->isTopList() ? 'ItemList' : 'Article',
-            'headline'      => $this->title,
-            'description'   => $this->getSeoDescription(),
+            '@context' => 'https://schema.org',
+            '@type' => $this->isTopList() ? 'ItemList' : 'Article',
+            'headline' => $this->title,
+            'description' => $this->getSeoDescription(),
             'datePublished' => $this->published_at?->toIso8601String(),
-            'dateModified'  => $this->updated_at->toIso8601String(),
-            'url'           => $this->getUrl(),
+            'dateModified' => $this->updated_at->toIso8601String(),
+            'url' => $this->getUrl(),
             'author' => [
                 '@type' => 'Organization',
-                'name'  => config('blog.name'),
-                'url'   => config('app.url'),
+                'name' => config('blog.name'),
+                'url' => config('app.url'),
             ],
             'publisher' => [
                 '@type' => 'Organization',
-                'name'  => config('blog.name'),
-                'logo'  => [
+                'name' => config('blog.name'),
+                'logo' => [
                     '@type' => 'ImageObject',
-                    'url'   => asset(config('blog.logo')),
+                    'url' => asset(config('blog.logo')),
                 ],
             ],
         ];
@@ -129,16 +142,19 @@ class Post extends Model
         // Schema específico para TopList — melhora rich results no Google
         if ($this->isTopList() && $this->relationLoaded('topListItems')) {
             $schema['numberOfItems'] = $this->topListItems->count();
-            $schema['itemListElement'] = $this->topListItems->map(fn($item) => [
-                '@type'    => 'ListItem',
+            $schema['itemListElement'] = $this->topListItems->map(fn ($item) => [
+                '@type' => 'ListItem',
                 'position' => $item->rank,
-                'name'     => $item->title,
-                'url'      => $item->external_url ?? $this->getUrl(),
+                'name' => $item->title,
+                'url' => $item->external_url ?? $this->getUrl(),
             ])->toArray();
         }
 
         if ($this->getOgImage()) {
-            $schema['image'] = asset($this->getOgImage());
+            $ogImage = $this->getOgImage();
+            $schema['image'] = str_starts_with($ogImage, 'http')
+                ? $ogImage
+                : route('img', ['path' => $ogImage]);
         }
 
         return $schema;

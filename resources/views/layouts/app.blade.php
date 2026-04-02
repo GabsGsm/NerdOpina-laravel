@@ -3,10 +3,20 @@
       x-data="themeManager()"
       x-init="init()"
       :class="{ 'dark': isDark }"
-      class="dark min-h-screen w-full overflow-x-hidden">
+      class="min-h-screen w-full overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{-- Previne FOUC: aplica tema antes do Alpine inicializar --}}
+    <script>
+        (function () {
+            var saved = localStorage.getItem('theme');
+            if (saved === 'dark' || !saved) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 
     @include('partials.seo')
 
@@ -28,6 +38,7 @@
 
     <div class="relative flex flex-col min-h-screen w-full" style="z-index:1">
         @include('partials.header')
+        <div class="h-16 shrink-0"></div>
 
         <main class="flex-1 w-full">
             @yield('content')

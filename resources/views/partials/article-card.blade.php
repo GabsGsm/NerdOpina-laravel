@@ -1,15 +1,15 @@
 @props(['post'])
 
-<a href="{{ $post->getUrl() }}" class="group block">
-    <article class="bg-bg-surface rounded-lg overflow-hidden border border-border-subtle
+<a href="{{ $post->getUrl() }}" class="group block h-full">
+    <article class="bg-bg-surface rounded-xl overflow-hidden border border-border-subtle
                     hover:border-border-focus transition-all duration-200 hover:shadow-lg h-full flex flex-col">
 
         {{-- Imagem --}}
         @if ($post->featured_image)
         <div class="aspect-video overflow-hidden">
-            <img src="{{ asset($post->featured_image) }}"
+            <img src="{{ $post->getFeaturedImageUrl() }}"
                  alt="{{ $post->featured_image_alt ?? $post->title }}"
-                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                  loading="lazy" decoding="async">
         </div>
         @else
@@ -22,23 +22,33 @@
         @endif
 
         {{-- Conteúdo --}}
-        <div class="p-5 flex flex-col flex-1">
-            @include('partials.category-badge', ['category' => $post->category])
+        <div class="p-5 flex flex-col flex-1 gap-2">
+            @include('partials.category-badge', ['category' => $post->category, 'linked' => false])
 
-            <h3 class="font-bold text-text-high mt-2 mb-2 group-hover:text-accent transition-colors duration-150 line-clamp-2"
-                style="font-family: var(--font-heading)">
+            <h3 class="font-heading font-bold text-text-high group-hover:text-accent
+                       transition-colors duration-150 line-clamp-2 leading-snug mt-1">
                 {{ $post->title }}
             </h3>
 
-            <p class="text-sm text-text-medium mb-4 line-clamp-2 flex-1">
+            <p class="text-sm text-text-medium line-clamp-2 flex-1">
                 {{ $post->excerpt }}
             </p>
 
             {{-- Meta --}}
-            <div class="flex items-center gap-3 text-xs text-text-low mt-auto">
+            @php
+                $readingMinutes = max(1, (int) ceil(str_word_count(strip_tags($post->content)) / 200));
+            @endphp
+            <div class="flex items-center gap-3 text-xs text-text-low mt-auto pt-2 border-t border-border-subtle">
                 <time datetime="{{ $post->published_at->toIso8601String() }}">
-                    {{ $post->published_at->format('d/m/Y') }}
+                    {{ $post->published_at->translatedFormat('d M Y') }}
                 </time>
+                <span>·</span>
+                <span class="flex items-center gap-1">
+                    <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ $readingMinutes }} min
+                </span>
             </div>
         </div>
     </article>

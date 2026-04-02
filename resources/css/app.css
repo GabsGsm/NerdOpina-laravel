@@ -102,18 +102,17 @@
 @layer base {
   * { border-color: var(--border-subtle); }
 
-  /* Transições globais suaves */
+  /* Transições globais de cor para dark mode suave */
   *,
   *::before,
   *::after {
-    transition-property: background-color, border-color, color, opacity, box-shadow;
+    transition-property: background-color, border-color, color;
     transition-duration: 200ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Exceções — elementos que não devem ter transição automática */
+  /* Exceções — elementos com transição própria não herdam a global */
   [class*="transition-"],
-  [class*="duration-"],
   [class*="animate-"],
   .no-transition {
     transition: unset;
@@ -139,5 +138,20 @@
       width: 100%;
       overflow-x: hidden;
       max-width: 100vw;
+  }
+
+  /* Links base */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+  .font-body {
+    font-family: var(--font-body);
   }
 }

@@ -14,8 +14,7 @@ $seo = [
     <header class="mb-12">
         <div class="flex items-center gap-3 mb-4">
             <div class="w-1.5 h-10 bg-accent rounded-full"></div>
-            <h1 class="text-3xl md:text-4xl font-bold text-text-high"
-                style="font-family: var(--font-heading)">
+            <h1 class="font-heading text-3xl md:text-4xl font-bold text-text-high">
                 {{ $page->title }}
             </h1>
         </div>

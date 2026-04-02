@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/raku_/Desktop/Vulpi Studio/Blogs/NerdOpina/nerd-opina -maxdepth 2 -type f \\\\\\(-name tailwind.config.* -o -name package.json \\\\\\))",
+      "Bash(find . -maxdepth 2 -type d ! -path */node_modules* ! -path */vendor* ! -path */storage* ! -path */.git* ! -path */bootstrap/cache*)",
+      "Bash(find /c/Users/raku_/Desktop/Vulpi Studio/Blogs/NerdOpina/nerd-opina/resources -type f \\\\\\(-name *.blade.php -o -name *.css -o -name *.js \\\\\\) ! -path */node_modules/*)",
+      "Bash(find 'c:\\\\Users\\\\raku_\\\\Desktop\\\\Vulpi Studio\\\\Blogs\\\\NerdOpina\\\\nerd-opina\\\\app' -name *.php -type f)",
+      "Bash(php artisan:*)"
+    ]
+  }
+}

@@ -2,42 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use App\Models\Category;
+use App\Models\HomeSection;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::published()
-            ->with('category')
-            ->where('type', 'article')
-            ->paginate(12);
+        $sections = HomeSection::active()
+            ->orderBy('position')
+            ->get()
+            ->map(function (HomeSection $section): HomeSection {
+                $section->posts = $section->buildPostQuery()->get();
 
-        $topLists = Post::published()
-            ->ofType('toplist')
-            ->with(['category', 'topListItems'])
-            ->limit(6)
-            ->get();
-
-        $latestNews = Post::published()
-            ->with('category')
-            ->where('type', 'article')
-            ->limit(6)
-            ->get();
+                return $section;
+            });
 
         $popularPosts = Post::published()
             ->with('category')
             ->limit(5)
             ->get();
 
-        $featuredTopList = $topLists->first();
+        $featuredPost = Post::published()
+            ->with('category')
+            ->latest('published_at')
+            ->first();
 
-        return view('posts.index', compact(
-            'posts', 'topLists', 'latestNews',
-            'popularPosts', 'featuredTopList'
-        ));
+        return view('posts.index', compact('sections', 'popularPosts', 'featuredPost'));
     }
 
     public function show(string $slug)
@@ -64,17 +57,15 @@ class PostController extends Controller
 
     public function search(Request $request)
     {
-        $query    = $request->get('q', '');
+        $query = $request->get('q', '');
         $category = $request->get('category', '');
 
         $posts = Post::published()
             ->with('category')
-            ->when($query, fn($q) => $q->where(fn($q) =>
-                $q->where('title', 'like', "%{$query}%")
+            ->when($query, fn ($q) => $q->where(fn ($q) => $q->where('title', 'like', "%{$query}%")
                 ->orWhere('excerpt', 'like', "%{$query}%")
             ))
-            ->when($category, fn($q) => $q->whereHas('category', fn($q) =>
-                $q->where('slug', $category)
+            ->when($category, fn ($q) => $q->whereHas('category', fn ($q) => $q->where('slug', $category)
             ))
             ->paginate(9)
             ->withQueryString();
