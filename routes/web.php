@@ -26,6 +26,7 @@ Route::get('/sobre', [PageController::class, 'sobre'])->name('pages.sobre');
 Route::get('/contato', [PageController::class, 'contato'])->name('pages.contato');
 
 // Categorias
+Route::get('/toplists', [CategoryController::class, 'toplist'])->name('toplists.index');
 Route::get('/categoria/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 // Páginas geradas no admin

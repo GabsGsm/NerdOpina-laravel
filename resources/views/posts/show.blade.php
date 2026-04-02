@@ -24,7 +24,7 @@ $postDate = $post->published_at->format('d') . ' de ' . $post->published_at->tra
 @endpush
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="site-container py-8">
 
     {{-- Breadcrumb --}}
     <nav class="flex items-center gap-2 text-sm text-text-medium mb-6 flex-wrap">

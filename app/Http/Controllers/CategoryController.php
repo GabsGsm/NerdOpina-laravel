@@ -7,6 +7,23 @@ use App\Models\Post;
 
 class CategoryController extends Controller
 {
+    public function toplist(): \Illuminate\View\View
+    {
+        $featured = Post::published()
+            ->ofType('toplist')
+            ->with(['category', 'topListItems'])
+            ->latest()
+            ->limit(3)
+            ->get();
+
+        $posts = Post::published()
+            ->ofType('toplist')
+            ->with(['category', 'topListItems'])
+            ->paginate(12);
+
+        return view('toplists.index', compact('featured', 'posts'));
+    }
+
     public function show(string $slug)
     {
         $category = Category::where('slug', $slug)

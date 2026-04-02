@@ -9,7 +9,7 @@
     }"
     class="fixed top-0 left-0 right-0 z-50 border-b border-border-subtle transition-all duration-300">
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="site-container">
         <div class="flex items-center justify-between h-16">
 
             {{-- Logo --}}
@@ -23,6 +23,12 @@
                    class="px-3 py-2 text-sm text-text-medium hover:text-text-high hover:bg-bg-elevated
                           rounded-lg transition-all duration-150">
                     Home
+                </a>
+
+                <a href="{{ route('toplists.index') }}"
+                   class="px-3 py-2 text-sm text-text-medium hover:text-text-high hover:bg-bg-elevated
+                          rounded-lg transition-all duration-150">
+                    Top Listas
                 </a>
 
                 @foreach ($categories as $category)
@@ -151,6 +157,12 @@
                class="block px-3 py-2.5 text-sm text-text-medium hover:text-text-high
                       hover:bg-bg-elevated rounded-lg transition-colors duration-150 mb-1">
                 Home
+            </a>
+
+            <a href="{{ route('toplists.index') }}"
+               class="block px-3 py-2.5 text-sm text-text-medium hover:text-text-high
+                      hover:bg-bg-elevated rounded-lg transition-colors duration-150 mb-1">
+                Top Listas
             </a>
 
             @foreach ($categories as $category)

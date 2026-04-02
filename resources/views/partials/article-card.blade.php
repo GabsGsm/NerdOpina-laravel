@@ -30,7 +30,7 @@
                 {{ $post->title }}
             </h3>
 
-            <p class="text-sm text-text-medium line-clamp-2 flex-1">
+            <p class="text-sm text-text-medium mb-4 line-clamp-2 wrap-break-word">
                 {{ $post->excerpt }}
             </p>
 
