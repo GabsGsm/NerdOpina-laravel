@@ -12,7 +12,7 @@ $colorMap = [
     'games'      => ['text' => 'text-cat-games',      'bg' => 'bg-cat-games/15'],
 ];
 $colors = $colorMap[strtolower($category->slug)] ?? null;
-$badgeClass = 'inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ' . ($colors ? $colors['text'] . ' ' . $colors['bg'] : '');
+$badgeClass = 'inline-flex w-fit items-center px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ' . ($colors ? $colors['text'] . ' ' . $colors['bg'] : '');
 $badgeStyle = $colors ? '' : 'color: ' . $category->color . '; background-color: ' . $category->color . '26;';
 @endphp
 
