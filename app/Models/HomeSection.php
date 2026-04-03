@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HomeSection extends Model
 {
     protected $fillable = [
+        'container_id',
         'title',
         'show_title',
         'show_view_all',
@@ -31,7 +33,13 @@ class HomeSection extends Model
             'category_ids' => 'array',
             'limit' => 'integer',
             'position' => 'integer',
+            'container_id' => 'integer',
         ];
+    }
+
+    public function container(): BelongsTo
+    {
+        return $this->belongsTo(HomeContainer::class, 'container_id');
     }
 
     public function scopeActive(Builder $query): Builder

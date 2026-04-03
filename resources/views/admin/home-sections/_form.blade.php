@@ -1,10 +1,34 @@
 {{-- Campos do formulário de seção home (create e edit) --}}
-{{-- Requer $categories. $homeSection pode ser null (create) ou um HomeSection (edit). --}}
+{{-- Requer $categories, $containers. $homeSection pode ser null (create) ou um HomeSection (edit). --}}
 
 <div x-data="{
     postType: '{{ old('post_type', $homeSection?->post_type ?? 'article') }}',
     showViewAll: {{ old('show_view_all', $homeSection?->show_view_all ?? false) ? 'true' : 'false' }},
 }">
+
+{{-- Container --}}
+<div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Container *</label>
+    @if ($selectedContainerId ?? false)
+        <input type="hidden" name="container_id" value="{{ $selectedContainerId }}">
+        <p class="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+            Container #{{ $selectedContainerId }}
+        </p>
+    @else
+        <select name="container_id" required
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('container_id') border-red-400 @enderror">
+            <option value="">Selecione um container...</option>
+            @foreach ($containers as $c)
+                <option value="{{ $c->id }}"
+                    {{ old('container_id', $homeSection?->container_id) == $c->id ? 'selected' : '' }}>
+                    #{{ $c->id }} — {{ $c->type === 'two_column' ? 'Duas Colunas' : 'Box' }}
+                    ({{ $c->sections->count() }} seção(ões))
+                </option>
+            @endforeach
+        </select>
+    @endif
+    @error('container_id')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+</div>
 
 {{-- Linha 1: Título + Tipo --}}
 <div class="grid grid-cols-2 gap-5">

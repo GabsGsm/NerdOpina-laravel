@@ -14,6 +14,7 @@ class StoreHomeSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'container_id' => ['required', 'integer', 'exists:home_containers,id'],
             'title' => ['required', 'string', 'max:255'],
             'show_title' => ['nullable', 'boolean'],
             'show_view_all' => ['nullable', 'boolean'],

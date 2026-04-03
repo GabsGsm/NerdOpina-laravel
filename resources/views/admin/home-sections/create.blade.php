@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="mb-6 flex items-center gap-2 text-sm text-gray-500">
-    <a href="{{ route('admin.home-sections.index') }}" class="hover:text-gray-700">Seções Home</a>
+    <a href="{{ route('admin.home-containers.index') }}" class="hover:text-gray-700">Layout Home</a>
     <span>/</span>
     <span class="text-gray-900 font-medium">Nova</span>
 </div>
@@ -24,7 +24,7 @@
                     class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors">
                 Criar Seção
             </button>
-            <a href="{{ route('admin.home-sections.index') }}"
+            <a href="{{ route('admin.home-containers.index') }}"
                class="px-5 py-2 text-sm font-medium text-gray-600 hover:text-gray-800">
                 Cancelar
             </a>

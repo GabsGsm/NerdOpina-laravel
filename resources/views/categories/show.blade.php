@@ -76,7 +76,33 @@ $seo = [
         <div class="lg:col-span-2">
 
             {{-- Filtros --}}
-            <div class="mb-8" x-data="categoryFilters()">
+            <div class="mb-8"
+                 x-data="{
+                     filtersOpen: false,
+                     search: '{{ request('q') }}',
+                     searchTimer: null,
+                     baseUrl: '{{ url()->current() }}',
+                     navigate(params) {
+                         const url = new URL(this.baseUrl);
+                         if (params.q)          url.searchParams.set('q', params.q);
+                         else                   url.searchParams.delete('q');
+                         if (params.subcategory) url.searchParams.set('subcategory', params.subcategory);
+                         else                    url.searchParams.delete('subcategory');
+                         if (params.sort && params.sort !== 'recent') url.searchParams.set('sort', params.sort);
+                         else                                          url.searchParams.delete('sort');
+                         url.searchParams.delete('page');
+                         window.location.href = url.toString();
+                     },
+                     onSearch() {
+                         clearTimeout(this.searchTimer);
+                         this.searchTimer = setTimeout(() => {
+                             this.navigate({ q: this.search, subcategory: '{{ request('subcategory') }}', sort: '{{ request('sort', 'recent') }}' });
+                         }, 500);
+                     },
+                     get hasFilters() {
+                         return {{ request()->hasAny(['q','subcategory','sort']) ? 'true' : 'false' }};
+                     }
+                 }">
                 <div class="bg-bg-surface border border-border-subtle rounded-xl p-5 shadow-sm">
 
                     {{-- Busca --}}
@@ -88,13 +114,14 @@ $seo = [
                         </svg>
                         <input type="text"
                                x-model="search"
+                               @input="onSearch()"
                                placeholder="Buscar por título..."
                                class="w-full pl-10 pr-10 py-2.5 bg-bg-elevated border border-border-subtle rounded-lg
                                       text-sm text-text-high placeholder:text-text-low
                                       focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/15
                                       transition-all duration-150">
                         <button x-show="search"
-                                @click="search = ''"
+                                @click="search = ''; navigate({ subcategory: '{{ request('subcategory') }}', sort: '{{ request('sort', 'recent') }}' })"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-low
                                        hover:text-text-high transition-colors duration-150">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,13 +152,15 @@ $seo = [
                             <label class="block text-xs font-medium text-text-medium mb-1.5 uppercase tracking-wide">
                                 Subcategoria
                             </label>
-                            <select x-model="subcategory"
+                            <select @change="navigate({ q: search, subcategory: $event.target.value, sort: '{{ request('sort', 'recent') }}' })"
                                     class="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded-lg
                                            text-sm text-text-high focus:outline-none focus:border-accent
                                            focus:ring-2 focus:ring-accent/15 transition-all duration-150 cursor-pointer">
                                 <option value="">Todas</option>
                                 @foreach ($category->children as $child)
-                                <option value="{{ $child->slug }}">{{ $child->name }}</option>
+                                <option value="{{ $child->slug }}" {{ request('subcategory') === $child->slug ? 'selected' : '' }}>
+                                    {{ $child->name }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -142,37 +171,38 @@ $seo = [
                             <label class="block text-xs font-medium text-text-medium mb-1.5 uppercase tracking-wide">
                                 Ordenar por
                             </label>
-                            <select x-model="sortBy"
+                            <select @change="navigate({ q: search, subcategory: '{{ request('subcategory') }}', sort: $event.target.value })"
                                     class="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded-lg
                                            text-sm text-text-high focus:outline-none focus:border-accent
                                            focus:ring-2 focus:ring-accent/15 transition-all duration-150 cursor-pointer">
-                                <option value="recent">Mais Recentes</option>
-                                <option value="oldest">Mais Antigos</option>
-                                <option value="title-asc">Título (A-Z)</option>
-                                <option value="title-desc">Título (Z-A)</option>
+                                <option value="recent"     {{ request('sort', 'recent') === 'recent'     ? 'selected' : '' }}>Mais Recentes</option>
+                                <option value="oldest"     {{ request('sort') === 'oldest'     ? 'selected' : '' }}>Mais Antigos</option>
+                                <option value="title-asc"  {{ request('sort') === 'title-asc'  ? 'selected' : '' }}>Título (A-Z)</option>
+                                <option value="title-desc" {{ request('sort') === 'title-desc' ? 'selected' : '' }}>Título (Z-A)</option>
                             </select>
                         </div>
 
                         {{-- Limpar --}}
                         <div class="flex items-end">
-                            <button @click="reset()"
-                                    :disabled="!hasFilters"
-                                    class="w-full px-4 py-2 bg-bg-elevated border border-border-subtle
-                                           text-sm text-text-medium hover:text-text-high hover:border-accent
-                                           rounded-lg transition-all duration-150
-                                           disabled:opacity-40 disabled:cursor-not-allowed">
+                            <a href="{{ url()->current() }}"
+                               class="w-full px-4 py-2 bg-bg-elevated border border-border-subtle
+                                      text-sm text-text-medium hover:text-text-high hover:border-accent
+                                      rounded-lg transition-all duration-150 text-center
+                                      {{ !request()->hasAny(['q','subcategory','sort']) ? 'opacity-40 pointer-events-none' : '' }}">
                                 Limpar Filtros
-                            </button>
+                            </a>
                         </div>
                     </div>
 
                     {{-- Indicador de filtros ativos --}}
-                    <div x-show="hasFilters" class="mt-4 pt-4 border-t border-border-subtle">
+                    @if (request()->hasAny(['q', 'subcategory', 'sort']))
+                    <div class="mt-4 pt-4 border-t border-border-subtle">
                         <p class="text-xs text-text-medium flex items-center gap-1.5">
                             <span class="w-2 h-2 bg-accent rounded-full inline-block"></span>
                             Filtros ativos
                         </p>
                     </div>
+                    @endif
                 </div>
             </div>
 
@@ -209,22 +239,4 @@ $seo = [
     </div>
 </div>
 
-<script>
-function categoryFilters() {
-    return {
-        search: '',
-        subcategory: '',
-        sortBy: 'recent',
-        filtersOpen: false,
-        get hasFilters() {
-            return this.search !== '' || this.subcategory !== '' || this.sortBy !== 'recent';
-        },
-        reset() {
-            this.search = '';
-            this.subcategory = '';
-            this.sortBy = 'recent';
-        }
-    }
-}
-</script>
 @endsection

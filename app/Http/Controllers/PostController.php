@@ -3,34 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\HomeSection;
+use App\Models\HomeContainer;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $sections = HomeSection::active()
+        $containers = HomeContainer::active()
             ->orderBy('position')
-            ->get()
-            ->map(function (HomeSection $section): HomeSection {
-                $section->posts = $section->buildPostQuery()->get();
-
-                return $section;
-            });
-
-        $popularPosts = Post::published()
-            ->with('category')
-            ->limit(5)
+            ->with([
+                'sections' => fn ($q) => $q->active()->orderBy('position'),
+                'sidebarWidgets' => fn ($q) => $q->where('is_active', true)->orderBy('position'),
+            ])
             ->get();
+
+        foreach ($containers as $container) {
+            foreach ($container->sections as $section) {
+                $section->setRelation('posts', $section->buildPostQuery()->get());
+            }
+        }
 
         $featuredPost = Post::published()
             ->with('category')
             ->latest('published_at')
             ->first();
 
-        return view('posts.index', compact('sections', 'popularPosts', 'featuredPost'));
+        return view('posts.index', compact('containers', 'featuredPost'));
     }
 
     public function show(string $slug)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreHomeSectionRequest;
 use App\Http\Requests\Admin\UpdateHomeSectionRequest;
 use App\Models\Category;
+use App\Models\HomeContainer;
 use App\Models\HomeSection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -22,27 +23,30 @@ class HomeSectionController extends Controller
     public function create(): View
     {
         $categories = Category::orderBy('name')->get();
+        $containers = HomeContainer::orderBy('position')->get();
+        $selectedContainerId = request('container_id');
 
-        return view('admin.home-sections.create', compact('categories'));
+        return view('admin.home-sections.create', compact('categories', 'containers', 'selectedContainerId'));
     }
 
     public function store(StoreHomeSectionRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['position'] = HomeSection::max('position') + 1;
+        $data['position'] = HomeSection::where('container_id', $data['container_id'])->max('position') + 1;
         $data['category_ids'] = $data['category_ids'] ?? null;
 
         HomeSection::create($data);
 
-        return redirect()->route('admin.home-sections.index')
+        return redirect()->route('admin.home-containers.index')
             ->with('success', 'Seção criada com sucesso.');
     }
 
     public function edit(HomeSection $homeSection): View
     {
         $categories = Category::orderBy('name')->get();
+        $containers = HomeContainer::orderBy('position')->get();
 
-        return view('admin.home-sections.edit', compact('homeSection', 'categories'));
+        return view('admin.home-sections.edit', compact('homeSection', 'categories', 'containers'));
     }
 
     public function update(UpdateHomeSectionRequest $request, HomeSection $homeSection): RedirectResponse
@@ -52,7 +56,7 @@ class HomeSectionController extends Controller
 
         $homeSection->update($data);
 
-        return redirect()->route('admin.home-sections.index')
+        return redirect()->route('admin.home-containers.index')
             ->with('success', 'Seção atualizada com sucesso.');
     }
 
@@ -60,13 +64,14 @@ class HomeSectionController extends Controller
     {
         $homeSection->delete();
 
-        return redirect()->route('admin.home-sections.index')
+        return redirect()->route('admin.home-containers.index')
             ->with('success', 'Seção excluída com sucesso.');
     }
 
     public function moveUp(HomeSection $homeSection): RedirectResponse
     {
-        $previous = HomeSection::where('position', '<', $homeSection->position)
+        $previous = HomeSection::where('container_id', $homeSection->container_id)
+            ->where('position', '<', $homeSection->position)
             ->orderByDesc('position')
             ->first();
 
@@ -76,12 +81,13 @@ class HomeSectionController extends Controller
             $previous->save();
         }
 
-        return redirect()->route('admin.home-sections.index');
+        return redirect()->route('admin.home-containers.index');
     }
 
     public function moveDown(HomeSection $homeSection): RedirectResponse
     {
-        $next = HomeSection::where('position', '>', $homeSection->position)
+        $next = HomeSection::where('container_id', $homeSection->container_id)
+            ->where('position', '>', $homeSection->position)
             ->orderBy('position')
             ->first();
 
@@ -91,6 +97,6 @@ class HomeSectionController extends Controller
             $next->save();
         }
 
-        return redirect()->route('admin.home-sections.index');
+        return redirect()->route('admin.home-containers.index');
     }
 }
