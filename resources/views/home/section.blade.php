@@ -1,3 +1,9 @@
+@php
+    $newLayouts = ['editorial_hero', 'featured_stack', 'featured_list', 'grid_cards'];
+@endphp
+@if (in_array($section->layout, $newLayouts))
+    @include('home.layouts.' . str_replace('_', '-', $section->layout), ['section' => $section])
+@else
 <section>
     {{-- Cabeçalho da seção --}}
     @if ($section->show_title || $section->show_view_all)
@@ -45,3 +51,4 @@
         </div>
     @endif
 </section>
+@endif

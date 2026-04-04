@@ -20,7 +20,7 @@ class UpdateHomeSectionRequest extends FormRequest
             'show_view_all' => ['nullable', 'boolean'],
             'view_all_url' => ['nullable', 'string', 'max:500'],
             'post_type' => ['required', 'in:article,toplist'],
-            'layout' => ['required', 'in:card,list'],
+            'layout' => ['required', 'in:card,list,editorial_hero,featured_stack,featured_list,grid_cards'],
             'category_ids' => ['nullable', 'array'],
             'category_ids.*' => ['integer', 'exists:categories,id'],
             'order_by' => ['required', 'in:latest,oldest'],

@@ -3,7 +3,12 @@
 
 <div x-data="{
     postType: '{{ old('post_type', $homeSection?->post_type ?? 'article') }}',
+    layout: '{{ old('layout', $homeSection?->layout ?? 'card') }}',
     showViewAll: {{ old('show_view_all', $homeSection?->show_view_all ?? false) ? 'true' : 'false' }},
+    get limitHint() {
+        const hints = { editorial_hero: '1 post recomendado', featured_stack: '3 posts recomendados', featured_list: '3 posts recomendados', grid_cards: '3 posts recomendados' };
+        return hints[this.layout] ?? null;
+    },
 }">
 
 {{-- Container --}}
@@ -51,21 +56,87 @@
 
 {{-- Linha 2: Layout --}}
 <div>
-    <label class="block text-sm font-medium text-gray-700 mb-1">Layout *</label>
-    <div class="flex gap-4">
-        <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="layout" value="card"
-                   {{ old('layout', $homeSection?->layout ?? 'card') === 'card' ? 'checked' : '' }}
-                   class="text-indigo-600 focus:ring-indigo-500">
-            <span class="text-sm text-gray-700">Cards (grade)</span>
+    <label class="block text-sm font-medium text-gray-700 mb-2">Layout *</label>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {{-- Card --}}
+        <label class="relative cursor-pointer">
+            <input type="radio" name="layout" value="card" x-model="layout"
+                   class="sr-only peer">
+            <div class="flex flex-col items-center gap-1.5 p-3 border-2 rounded-lg text-center transition-all duration-150
+                        border-gray-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:border-gray-300">
+                <svg class="w-5 h-5 text-gray-500 peer-checked:text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                <span class="text-xs font-medium text-gray-700">Cards</span>
+            </div>
         </label>
-        <label x-show="postType === 'article'" class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="layout" value="list"
-                   {{ old('layout', $homeSection?->layout) === 'list' ? 'checked' : '' }}
-                   class="text-indigo-600 focus:ring-indigo-500">
-            <span class="text-sm text-gray-700">Lista</span>
+
+        {{-- Lista --}}
+        <label class="relative cursor-pointer" x-show="postType === 'article'">
+            <input type="radio" name="layout" value="list" x-model="layout"
+                   class="sr-only peer">
+            <div class="flex flex-col items-center gap-1.5 p-3 border-2 rounded-lg text-center transition-all duration-150
+                        border-gray-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:border-gray-300">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                </svg>
+                <span class="text-xs font-medium text-gray-700">Lista</span>
+            </div>
+        </label>
+
+        {{-- Editorial Destaque --}}
+        <label class="relative cursor-pointer" x-show="postType === 'article'">
+            <input type="radio" name="layout" value="editorial_hero" x-model="layout"
+                   class="sr-only peer">
+            <div class="flex flex-col items-center gap-1.5 p-3 border-2 rounded-lg text-center transition-all duration-150
+                        border-gray-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:border-gray-300">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+                </svg>
+                <span class="text-xs font-medium text-gray-700">Editorial<br>Destaque</span>
+            </div>
+        </label>
+
+        {{-- Destaque + Pilha --}}
+        <label class="relative cursor-pointer" x-show="postType === 'article'">
+            <input type="radio" name="layout" value="featured_stack" x-model="layout"
+                   class="sr-only peer">
+            <div class="flex flex-col items-center gap-1.5 p-3 border-2 rounded-lg text-center transition-all duration-150
+                        border-gray-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:border-gray-300">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h9a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zm0 6a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1v-2z"/>
+                </svg>
+                <span class="text-xs font-medium text-gray-700">Destaque<br>+ Pilha</span>
+            </div>
+        </label>
+
+        {{-- Destaque + Lista Compacta --}}
+        <label class="relative cursor-pointer" x-show="postType === 'article'">
+            <input type="radio" name="layout" value="featured_list" x-model="layout"
+                   class="sr-only peer">
+            <div class="flex flex-col items-center gap-1.5 p-3 border-2 rounded-lg text-center transition-all duration-150
+                        border-gray-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:border-gray-300">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h8a1 1 0 011 1v10a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zm0 6a1 1 0 011-1h4a1 1 0 011 1v1a1 1 0 01-1 1h-4a1 1 0 01-1-1v-1zm0 4a1 1 0 011-1h4a1 1 0 011 1v1a1 1 0 01-1 1h-4a1 1 0 01-1-1v-1z"/>
+                </svg>
+                <span class="text-xs font-medium text-gray-700">Destaque<br>+ Lista</span>
+            </div>
+        </label>
+
+        {{-- Grade Elevada --}}
+        <label class="relative cursor-pointer" x-show="postType === 'article'">
+            <input type="radio" name="layout" value="grid_cards" x-model="layout"
+                   class="sr-only peer">
+            <div class="flex flex-col items-center gap-1.5 p-3 border-2 rounded-lg text-center transition-all duration-150
+                        border-gray-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:border-gray-300">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zm8 0a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2zm-8 8a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zm8 0a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z"/>
+                </svg>
+                <span class="text-xs font-medium text-gray-700">Grade<br>Elevada</span>
+            </div>
         </label>
     </div>
+    <p class="mt-2 text-xs text-indigo-600 font-medium" x-show="limitHint" x-text="'💡 ' + limitHint"></p>
     @error('layout')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
 </div>
 
