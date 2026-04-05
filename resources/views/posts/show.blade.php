@@ -7,7 +7,7 @@ $seo = [
     'robots'      => $post->robots,
     'canonical'   => $post->canonical_url ?: $post->getUrl(),
     'og_type'     => 'article',
-    'og_image'    => $post->getOgImage() ? asset($post->getOgImage()) : null,
+    'og_image'    => $post->getFeaturedImageUrl() ? asset($post->getFeaturedImageUrl()) : null,
     'schema'      => $post->getSchemaMarkup(),
 ];
 $postDate = $post->published_at->format('d') . ' de ' . $post->published_at->translatedFormat('F') . ' de ' . $post->published_at->format('Y');

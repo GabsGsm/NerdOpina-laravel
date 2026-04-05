@@ -10,6 +10,10 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         using: function (): void {
+            // rota API para o n8n
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
             // Admin deve ser registrado ANTES do catch-all /{slug} de web.php
             Route::middleware('web')
                 ->prefix('admin')
@@ -24,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'admin.security' => \App\Http\Middleware\AdminSecurityHeaders::class,
+            'api.token'      => \App\Http\Middleware\ApiTokenMiddleware::class,
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('admin.login'));

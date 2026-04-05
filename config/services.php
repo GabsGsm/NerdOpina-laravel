@@ -35,4 +35,6 @@ return [
         ],
     ],
 
+    'n8n_token' => env('N8N_TOKEN'),
+
 ];
