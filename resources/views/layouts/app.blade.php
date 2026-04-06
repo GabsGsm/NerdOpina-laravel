@@ -21,8 +21,14 @@
     @include('partials.seo')
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <script async custom-element="amp-auto-ads"
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
 </head>
 <body class="antialiased bg-bg-base text-text-high min-h-screen w-full flex flex-col relative overflow-x-hidden">
+
+<amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-4333793854754492"></amp-auto-ads>
 
     {{-- Orbs decorativos --}}
     <div class="fixed inset-0 overflow-hidden pointer-events-none" style="z-index:0">

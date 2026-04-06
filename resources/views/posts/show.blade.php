@@ -10,7 +10,7 @@ $seo = [
     'og_image'    => $post->getFeaturedImageUrl() ? asset($post->getFeaturedImageUrl()) : null,
     'schema'      => $post->getSchemaMarkup(),
 ];
-$postDate = $post->published_at->format('d') . ' de ' . $post->published_at->translatedFormat('F') . ' de ' . $post->published_at->format('Y');
+$postDate = $post->published_at ? $post->getFormattedDate() : 'Rascunho';
 @endphp
 
 @push('header-bottom')
@@ -99,7 +99,7 @@ $postDate = $post->published_at->format('d') . ' de ' . $post->published_at->tra
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
-                            <time datetime="{{ $post->published_at->toIso8601String() }}" itemprop="datePublished">
+                            <time datetime="{{ $post->published_at?->toIso8601String() }}" itemprop="datePublished">
                                 {{ $postDate }}
                             </time>
                         </div>
@@ -122,6 +122,14 @@ $postDate = $post->published_at->format('d') . ' de ' . $post->published_at->tra
                               transition-all duration-150" aria-label="Twitter">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                        </svg>
+                    </a>
+                    <a :href="whatsappUrl" target="_blank" rel="noopener noreferrer"
+                       class="p-2 text-text-medium hover:text-accent hover:bg-bg-elevated rounded-lg
+                              transition-all duration-150" aria-label="WhatsApp">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                            <path d="M12.004 2C6.476 2 2 6.476 2 12.004c0 1.77.463 3.542 1.344 5.094L2 22l5.02-1.322A10.002 10.002 0 0012.004 22C17.528 22 22 17.524 22 12.004 22 6.476 17.528 2 12.004 2zm0 18.214a8.214 8.214 0 01-4.19-1.146l-.3-.178-3.11.818.832-3.045-.196-.313A8.214 8.214 0 013.786 12.004c0-4.538 3.692-8.23 8.218-8.23 4.527 0 8.219 3.692 8.219 8.23 0 4.535-3.692 8.21-8.219 8.21z"/>
                         </svg>
                     </a>
                     <button @click="copyLink()"
@@ -171,20 +179,7 @@ $postDate = $post->published_at->format('d') . ' de ' . $post->published_at->tra
             @endif
 
             {{-- Conteúdo do artigo --}}
-            <div class="prose prose-base lg:prose-lg max-w-none
-                        prose-headings:font-heading prose-headings:font-bold prose-headings:text-text-high
-                        prose-p:text-text-medium prose-p:leading-relaxed
-                        prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-                        prose-blockquote:border-l-4 prose-blockquote:border-accent
-                        prose-blockquote:bg-bg-elevated prose-blockquote:rounded-r-xl
-                        prose-blockquote:not-italic prose-blockquote:text-text-high prose-blockquote:px-5
-                        prose-strong:text-text-high
-                        prose-code:text-accent prose-code:bg-bg-elevated prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5
-                        prose-pre:bg-bg-elevated prose-pre:border prose-pre:border-border-subtle prose-pre:rounded-xl
-                        prose-img:rounded-xl prose-img:border prose-img:border-border-subtle
-                        prose-hr:border-border-subtle
-                        prose-li:text-text-medium"
-                 itemprop="articleBody">
+            <div class="post-content" itemprop="articleBody">
                 {!! $post->content !!}
             </div>
 
@@ -239,6 +234,7 @@ function shareButtons(title, url) {
     return {
         facebookUrl: 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
         twitterUrl: 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodeURIComponent(url),
+        whatsappUrl: 'https://wa.me/?text=' + encodeURIComponent(title + ' ' + url),
         async copyLink() {
             try {
                 await navigator.clipboard.writeText(url);

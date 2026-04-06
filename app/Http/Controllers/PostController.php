@@ -36,7 +36,7 @@ class PostController extends Controller
 
     public function show(string $slug)
     {
-        $post = Post::published()
+        $post = Post::postView()
             ->with(['category', 'category.parent'])
             ->where('slug', $slug)
             ->firstOrFail();

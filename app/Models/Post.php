@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
@@ -37,6 +38,15 @@ class Post extends Model
         return $query->where('status', 'published')
             ->where('published_at', '<=', now())
             ->orderByDesc('published_at');
+    }
+
+    public function scopePostView(Builder $query): Builder
+    {
+        if (Auth::user()?->is_admin) {
+            return $query->orderByDesc('created_at');
+        }
+
+        return $this->scopePublished($query);
     }
 
     public function scopeOfType(Builder $query, string $type): Builder
